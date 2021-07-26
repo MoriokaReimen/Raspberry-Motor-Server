@@ -2,12 +2,15 @@ version: "3"
 networks:
   giteanet:
     external: false
+  jenkinsnet:
+    external: false
 
 services:
   nginx:
     image: nginx:latest
     depends_on:
       - gitea
+      - jenkins
     container_name: nginx
     volumes:
       - ./reverse_proxy.conf:/etc/nginx/conf.d/reverse_proxy.conf:ro
@@ -16,6 +19,7 @@ services:
       - /:/etc/temp
     networks:
       - giteanet
+      - jenkinsnet
     ports:
       - 80:80
       - 222:222
@@ -66,6 +70,23 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - ./app.ini:/data/gitea/conf/app.ini
+  jenkins:
+    image: jenkins4eval/jenkins
+    container_name: jenkins
+    environment:
+      - JENKINS_OPTS="--prefix=/jenkins"
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "3m"
+    restart: unless-stopped
+    networks:
+      - jenkinsnet
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
 
 volumes:
   giteadb-data:
@@ -80,3 +101,9 @@ volumes:
       type: 'none'
       o: 'bind'
       device: './gitea-data/'
+  jenkins_home:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './jenkins_home/'
