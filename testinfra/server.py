@@ -53,8 +53,14 @@ def test_all():
 
     # test gitea
     gitea_http = host.run("curl -Is http://192.168.11.20/gitea/ | head -1")
-    print(gitea_http.stdout)
     result["gitea working"]  =   "OK" if 'HTTP/1.1 200 OK' in gitea_http.stdout else "NG"
+
+    # test directory size
+    gitea_file = host.file("/root/Server/Docker/gitea-data/")
+    result["gitea file size"]  =   "OK" if  gitea_file.size < 4000000 else "NG"
+
+    giteadb_file = host.file("/root/Server/Docker/giteadb-data/")
+    result["giteadb file size"]  =   "OK" if  giteadb_file.size < 2000000 else "NG"
 
     return result
 

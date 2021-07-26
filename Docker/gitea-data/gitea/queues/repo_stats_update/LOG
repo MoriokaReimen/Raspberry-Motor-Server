@@ -166,3 +166,12 @@
 01:22:56.992878 version@stat F·[1] S·127B[127B] Sc·[0.25]
 01:22:57.021793 db@janitor F·3 G·0
 01:22:57.021874 db@open done T·59.709198ms
+=============== Jul 26, 2021 (BST) ===============
+01:36:49.609086 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+01:36:49.609593 version@stat F·[1] S·127B[127B] Sc·[0.25]
+01:36:49.609663 db@open opening
+01:36:49.609941 journal@recovery F·1
+01:36:49.610937 journal@recovery recovering @35
+01:36:49.615905 version@stat F·[1] S·127B[127B] Sc·[0.25]
+01:36:49.634179 db@janitor F·3 G·0
+01:36:49.634258 db@open done T·24.55244ms
