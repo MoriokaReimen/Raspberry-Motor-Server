@@ -41,6 +41,21 @@ def test_all():
     ufw = host.service("ufw")
     result["ufw running"]  =   "OK" if ufw.is_running else "NG"
 
+    # test docker
+    nginx = host.docker("nginx")
+    result["docker nginx"]  =   "OK" if nginx.is_running else "NG"
+
+    gitea = host.docker("gitea")
+    result["docker gitea"]  =   "OK" if gitea.is_running else "NG"
+
+    giteadb = host.docker("giteadb")
+    result["docker giteadb"]  =   "OK" if giteadb.is_running else "NG"
+
+    # test gitea
+    gitea_http = host.run("curl -Is http://192.168.11.20/gitea/ | head -1")
+    print(gitea_http.stdout)
+    result["gitea working"]  =   "OK" if 'HTTP/1.1 200 OK' in gitea_http.stdout else "NG"
+
     return result
 
 

@@ -9,5 +9,10 @@ pushd ./testinfra
 python3 server.py 1> /dev/null 2> /dev/null & disown
 popd
 
+# launch docker servers
+pushd ./Docker
+docker-compose up 1> /dev/null 2> /dev/null & disown
+popd
+
 popd
 

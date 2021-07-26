@@ -1,0 +1,82 @@
+version: "3"
+networks:
+  giteanet:
+    external: false
+
+services:
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - gitea
+    container_name: nginx
+    volumes:
+      - ./reverse_proxy.conf:/etc/nginx/conf.d/reverse_proxy.conf:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /:/etc/temp
+    networks:
+      - giteanet
+    ports:
+      - 80:80
+      - 222:222
+
+  giteadb:
+    image: arm32v7/postgres
+    container_name: giteadb
+    environment:
+      POSTGRES_DB: giteadb
+      POSTGRES_USER: gitea
+      POSTGRES_PASSWORD: gitea
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "3m"
+    restart: unless-stopped
+    networks:
+      - giteanet
+    volumes:
+      - giteadb-data:/var/lib/postgresql/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+  gitea:
+    image: kunde21/gitea-arm
+    container_name: gitea
+    environment:
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=giteadb:5432
+      - GITEA__database__NAME=giteadb
+      - GITEA__database__USER=gitea
+      - GITEA__database__PASSWD=gitea
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "3m"
+    restart: unless-stopped
+    depends_on:
+      - giteadb
+    networks:
+      - giteanet
+    links:
+      - "giteadb"
+    volumes:
+      - gitea-data:/data/
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./app.ini:/data/gitea/conf/app.ini
+
+volumes:
+  giteadb-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './giteadb-data/'
+  gitea-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './gitea-data/'
