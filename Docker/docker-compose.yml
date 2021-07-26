@@ -13,7 +13,7 @@ services:
       - jenkins
     container_name: nginx
     volumes:
-      - ./reverse_proxy.conf:/etc/nginx/conf.d/reverse_proxy.conf:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - /:/etc/temp
@@ -70,6 +70,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
       - ./app.ini:/data/gitea/conf/app.ini
+
   jenkins:
     image: jenkins4eval/jenkins
     container_name: jenkins
