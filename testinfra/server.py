@@ -41,6 +41,10 @@ def test_all():
     ufw = host.service("ufw")
     result["ufw running"]  =   "OK" if ufw.is_running else "NG"
 
+    # test glances
+    glances_http = host.run("curl -Is http://192.168.11.20:20000 | head -1")
+    result["glances working"]  =   "OK" if 'HTTP/1.0 401 Unauthorized' in glances_http.stdout else "NG"
+
     # test docker
     nginx = host.docker("nginx")
     result["docker nginx"]  =   "OK" if nginx.is_running else "NG"

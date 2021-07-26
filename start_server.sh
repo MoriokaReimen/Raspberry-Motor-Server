@@ -6,7 +6,7 @@ printf "youkan" | glances -w --username --password --port 20000 1> /dev/null 2> 
 
 # launch testinfra
 pushd ./testinfra
-# python3 server.py 1> /dev/null 2> /dev/null & disown
+python3 server.py 1> /dev/null 2> /dev/null & disown
 popd
 
 # launch docker servers
