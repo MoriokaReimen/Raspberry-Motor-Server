@@ -7,7 +7,7 @@ networks:
 
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:alpine
     depends_on:
       - gitea
       - jenkins

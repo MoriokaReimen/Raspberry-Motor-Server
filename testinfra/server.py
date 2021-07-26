@@ -1,12 +1,14 @@
 from flask import Flask, render_template
 import testinfra
 from datetime import datetime
+import humanfriendly
+import io
 
 app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():
+def index():
     print("Test Executed!!")
     contents = "Test Result:</br>"
 
@@ -46,6 +48,9 @@ def test_all():
     result["glances working"]  =   "OK" if 'HTTP/1.0 401 Unauthorized' in glances_http.stdout else "NG"
 
     # test docker
+    docker = host.service("docker")
+    result["docker running"]  =   "OK" if docker.is_running else "NG"
+
     nginx = host.docker("nginx")
     result["docker nginx"]  =   "OK" if nginx.is_running else "NG"
 
@@ -55,16 +60,33 @@ def test_all():
     giteadb = host.docker("giteadb")
     result["docker giteadb"]  =   "OK" if giteadb.is_running else "NG"
 
+    jenkins = host.docker("jenkins")
+    result["docker jenkins"]  =   "OK" if jenkins.is_running else "NG"
+
+    docker_df = host.run("docker system df --format='{{.Size}}'").stdout
+    size = 0
+    for line in io.StringIO(docker_df):
+        size += humanfriendly.parse_size(line)
+    print(size)
+    result["docker size"]  =   "OK" if size < 7000000000 else "NG"
+
     # test gitea
     gitea_http = host.run("curl -Is http://192.168.11.20/gitea/ | head -1")
     result["gitea working"]  =   "OK" if 'HTTP/1.1 200 OK' in gitea_http.stdout else "NG"
 
+    # test jenkins
+    jenkins_http = host.run("curl -Is http://192.168.11.20/jenkins/login | head -1")
+    result["jenkins working"]  =   "OK" if 'HTTP/1.1 200 OK' in jenkins_http.stdout else "NG"
+
     # test directory size
     gitea_file = host.file("/root/Server/Docker/gitea-data/")
-    result["gitea file size"]  =   "OK" if  gitea_file.size < 4000000 else "NG"
+    result["gitea file size"]  =   "OK" if  gitea_file.size < 4000000000 else "NG"
 
     giteadb_file = host.file("/root/Server/Docker/giteadb-data/")
-    result["giteadb file size"]  =   "OK" if  giteadb_file.size < 2000000 else "NG"
+    result["giteadb file size"]  =   "OK" if  giteadb_file.size < 2000000000 else "NG"
+
+    jenkins_file = host.file("/root/Server/Docker/jenkins_home/")
+    result["jenkins file size"]  =   "OK" if  jenkins_file.size < 4000000000 else "NG"
 
     return result
 
