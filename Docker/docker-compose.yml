@@ -71,7 +71,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
 
   jenkins:
-    image: jenkins4eval/jenkins
+    build:
+      context: ./Jenkins
     container_name: jenkins
     environment:
       - JENKINS_OPTS="--prefix=/jenkins"
