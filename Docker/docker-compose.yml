@@ -13,10 +13,9 @@ services:
       - jenkins
     container_name: nginx
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./Nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - /:/etc/temp
     networks:
       - giteanet
       - jenkinsnet
@@ -40,7 +39,7 @@ services:
     networks:
       - giteanet
     volumes:
-      - giteadb-data:/var/lib/postgresql/data
+      - ./GiteaDB/giteadb-data:/var/lib/postgresql/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
 
@@ -66,10 +65,10 @@ services:
     links:
       - "giteadb"
     volumes:
-      - gitea-data:/data/
+      - ./Gitea/gitea-data:/data/
+      - ./Gitea/app.ini:/data/gitea/conf/app.ini
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ./app.ini:/data/gitea/conf/app.ini
 
   jenkins:
     image: jenkins4eval/jenkins
@@ -85,7 +84,7 @@ services:
     networks:
       - jenkinsnet
     volumes:
-      - jenkins_home:/var/jenkins_home
+      - ./Jenkins/jenkins_home:/var/jenkins_home
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
 
