@@ -1,5 +1,5 @@
 #! /bin/bash
-pushd $(dirname $0) 1> /dev/null
+pushd $(dirname ${BASH_SOURCE}) 1> /dev/null
 
 # stop glances
 pkill glances

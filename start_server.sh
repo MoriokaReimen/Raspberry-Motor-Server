@@ -1,5 +1,5 @@
 #! /bin/bash
-pushd $(dirname $0) 1> /dev/null
+pushd $(dirname ${BASH_SOURCE}) 1> /dev/null
 
 # launch glances
 printf "youkan" | glances -w --username --password --port 20000 1> /dev/null 2> /dev/null & disown
