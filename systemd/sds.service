@@ -1,0 +1,14 @@
+# place this files in /etc/systemd/system/
+[Unit]
+Description = Software Development Server
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/root/Server/start_server.sh
+ExecStop=/root/Server/stop_server.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
+
