@@ -68,7 +68,7 @@ def test_all():
     for line in io.StringIO(docker_df):
         size += humanfriendly.parse_size(line)
     print(size)
-    result["docker size"]  =   "OK" if size < 7000000000 else "NG"
+    result["docker size"]  =   "OK" if size < 8000000000 else "NG"
 
     # test gitea
     gitea_http = host.run("sudo curl -Is http://192.168.11.20/gitea/ | head -1")
