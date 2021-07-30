@@ -90,7 +90,7 @@ def test_all():
       result["jenkins file size"]  =   "OK" if  jenkins_file.size < 4000000000 else "NG"
     except:
         err = sys.exc_info()[0]
-        result["Unit test Pailed out!!"] =  err
+        result["Unit test bail out!!"] =  err
 
     return result
 
