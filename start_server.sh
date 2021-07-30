@@ -11,6 +11,12 @@ popd 1> /dev/null
 
 # launch docker servers
 pushd ./Docker 1> /dev/null
+
+# set up data directories if not exist
+mkdir -p "./Gitea/gitea-data/"
+mkdir -p "./GiteaDB/giteadb-data/"
+mkdir -p "./Docker/Jenkins/jenkins_home/"
+
 docker-compose up -d & disown
 popd 1> /dev/null
 
