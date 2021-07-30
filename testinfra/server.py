@@ -15,7 +15,7 @@ def index():
     return render_template('layout.html', title = 'Test', datetime =datetime.now() ,test_all = test_all)
 
 def test_all():
-      result = {}
+    result = {}
     try:
       host = testinfra.host.get_host("local://", sudo=True)
 
